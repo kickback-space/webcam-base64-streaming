@@ -72,7 +72,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	for {
 		var msg Message
 		// Read in a new message as JSON and map it to a Message object
-		msg, err := ws.ReadMessage(&msg)
+		err := ws.ReadJSON(&msg)
 		if err != nil {
 				log.Printf("error: %v", err)
 				delete(clientSenders, ws)
