@@ -7,6 +7,9 @@ npm install
 ## Usage
 ```text
 npm run start
+
+go build server.go
+./server
 ```
 
 - Go to */streamer*
