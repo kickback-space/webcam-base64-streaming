@@ -42,6 +42,7 @@ func headers(w http.ResponseWriter, req *http.Request) {
 
 func handleRecievers(w http.ResponseWriter, r *http.Request) {
 	// Upgrade initial GET request to a websocket
+	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 
@@ -91,7 +92,7 @@ func handleMessages() {
 			log.Println("sending message: ")
 			err := client.WriteJSON(msg)
 			if err != nil {
-				log.Printf("error: %v", err)
+				log.Printf("error sending message: %v", err)
 				client.Close()
 				delete(clientReceivers, client)
 			}
