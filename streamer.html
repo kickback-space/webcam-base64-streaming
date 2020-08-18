@@ -28,8 +28,7 @@
         ws.onopen = () => {
             console.log(`Connected to ${WS_URL}`);
             setInterval(() => {
-                console.log(JSON.stringify({data: getFrame()}));
-                ws.send(JSON.stringify({data: getFrame()}))
+                ws.send(getFrame());
             }, 1000 / FPS);
         }
     </script>
