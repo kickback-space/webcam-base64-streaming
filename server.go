@@ -49,11 +49,21 @@ func handleRecievers(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("in receeiver", err)
 	}
 	// Make sure we close the connection when the function returns
-	defer ws.Close()
+	// defer ws.Close()
 
 	// Register our new client
 	clientReceivers[ws] = true
 	log.Printf("receiver conneceted")
+	for client := range clientReceivers {
+		log.Println("sending confirmed: ")
+		err := client.WriteJSON("{data: test}")
+		log.Println("confirmed success")
+		if err != nil {
+			log.Printf("error sending message: %v", err)
+			client.Close()
+			delete(clientReceivers, client)
+		}
+	}
 }
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
@@ -80,6 +90,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		}
 		// Send the newly received message to the broadcast channel
 		broadcast <- msg
+		log.Println("msg receeived.")
 	}
 }
 
@@ -89,7 +100,7 @@ func handleMessages() {
 		msg := <-broadcast
 		// Send it out to every client that is currently connected
 		for client := range clientReceivers {
-			log.Println("sending message: ")
+			log.Println("sending message.")
 			err := client.WriteJSON(msg)
 			if err != nil {
 				log.Printf("error sending message: %v", err)

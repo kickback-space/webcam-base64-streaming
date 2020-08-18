@@ -23,7 +23,7 @@
         // const WS_URL = location.origin.replace(/^http/, 'ws');
         const WS_URL = 'ws://localhost:8090/wsout';
         console.log(WS_URL)
-        const FPS = 1;
+        const FPS = 100;
         const ws = new WebSocket(WS_URL);
         ws.onopen = () => {
             console.log(`Connected to ${WS_URL}`);
