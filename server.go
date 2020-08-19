@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
+	"net"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/websocket"
 )
@@ -69,7 +71,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 
 	// Register our new client
 	clientSenders[ws] = true
-
+	log.Printf("connection received")
 	for {
 		_, p, err := ws.ReadMessage()
 		if err != nil {
@@ -109,6 +111,14 @@ func main() {
 	go handleMessages()
 
 	log.Println("http server started on :8090")
+
+	host, _ := os.Hostname()
+	addrs, _ := net.LookupIP(host)
+	for _, addr := range addrs {
+		if ipv4 := addr.To4(); ipv4 != nil {
+			fmt.Println("IPv4: ", ipv4)
+		}
+	}
 
 	err := http.ListenAndServe(":8090", nil)
 	if err != nil {
